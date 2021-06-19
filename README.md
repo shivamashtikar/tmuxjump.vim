@@ -30,3 +30,9 @@ Using [neobundle](https://github.com/Shougo/neobundle.vim):
 With [pathogen.vim](https://github.com/tpope/vim-pathogen), just clone this repository inside `~/.vim/bundle`:
 
 
+### Configuration
+
+Map a keybinding to trigger plugin
+
+  `nmap <leader>ft :TmuxJumpFile<CR>`
+

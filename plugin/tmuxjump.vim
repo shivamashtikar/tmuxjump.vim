@@ -20,12 +20,24 @@ function! tmuxjump#jump_to_file(fileWithPos) abort
 endfunction
 
 function! tmuxjump#capture_and_jump(bang) abort
-  let l:capturedFiles = system('sh '. g:script_path)
-  if l:capturedFiles == ""
-    echo "TmuxJump.vim: Found no file paths"
+
+  let l:is_in_tmux = system('[[ "$TERM" =~ "screen" && "$TERM_PROGRAM" == "tmux" ]] && echo "1"')
+  if !l:is_in_tmux
+    echohl WarningMsg
+    echo "TmuxJump.vim: Not in tmux session"
+    echohl None
     return
   endif
-  let l:list = reverse(split(l:capturedFiles, '\n'))
+
+  let l:capturedFiles = system('sh '. g:script_path)
+  if l:capturedFiles == ""
+    echohl WarningMsg
+    echo "TmuxJump.vim: Found no file paths"
+    echohl None
+    return
+  endif
+
+  let l:list = uniq(reverse(split(l:capturedFiles, '\n')))
   let l:name = 'Sibling pane files'
   let l:prompt = 'TmuxJump> '
   let l:action = ''
@@ -45,6 +57,6 @@ function! tmuxjump#capture_and_jump(bang) abort
         \)) 
 endfunction
 
-command! -bang -nargs=* TmuxJumpFiles call tmuxjump#capture_and_jump(<bang>0)
+command! -bang -nargs=* TmuxJumpFile call tmuxjump#capture_and_jump(<bang>0)
 
 let g:tmuxjump_loaded = v:true
