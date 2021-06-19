@@ -2,10 +2,9 @@
 
 A plugin to open file from file paths printed in sibling tmux pane. 
 
-![TmuxJump](https://youtu.be/Wo1E1z257GA)
+[![TmuxJump](./assets/tmuxjump-vim.png)](https://youtu.be/Wo1E1z257GA)
 
 ## Install
-
 
 ### Dependencies
 
