@@ -13,7 +13,7 @@ function capture_panes() {
       fi
     done
 
-    echo "$captured" | grep -oiP "[\/]?([a-z\_\-]+\/)+[a-z.]+(.)*" | cut -d' ' -f1
+    echo "$captured" | grep -oiE "[\/]?([a-z\_\-]+\/)+[a-z.]+(.)*" | cut -d' ' -f1
 }
 
 capture_panes
