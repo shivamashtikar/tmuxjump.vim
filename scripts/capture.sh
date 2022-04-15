@@ -1,5 +1,6 @@
 #!/bin/bash
 
+pattern=$1
 
 function capture_panes() {
     local pane captured current_pane
@@ -13,7 +14,7 @@ function capture_panes() {
       fi
     done
 
-    echo "$captured" | grep -oiE "[\/]?([a-z\_\-]+\/)+[a-z.]+(.)*" | cut -d' ' -f1
+    echo "$captured" | grep -oiE "[\/]?([a-z\_\-]+\/)+[a-z.]+(.)*" | cut -d' ' -f1 | grep "$pattern" 
 }
 
 capture_panes

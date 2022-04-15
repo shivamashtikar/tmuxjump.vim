@@ -19,8 +19,7 @@ function! tmuxjump#jump_to_file(fileWithPos) abort
   endif
 endfunction
 
-function! tmuxjump#capture_and_jump(bang) abort
-
+function tmuxjump#grep_tmux(pattern) abort
   let l:is_in_tmux = system('[[ "$TERM" =~ "screen" && "$TERM_PROGRAM" == "tmux" ]] && echo "1"')
   if !l:is_in_tmux
     echohl WarningMsg
@@ -29,7 +28,7 @@ function! tmuxjump#capture_and_jump(bang) abort
     return
   endif
 
-  let l:capturedFiles = system('sh '. g:script_path)
+  let l:capturedFiles = system('sh '. g:script_path . ' '. a:pattern)
   if l:capturedFiles == ""
     echohl WarningMsg
     echo "TmuxJump.vim: Found no file paths"
@@ -38,6 +37,20 @@ function! tmuxjump#capture_and_jump(bang) abort
   endif
 
   let l:list = uniq(reverse(split(l:capturedFiles, '\n')))
+  return l:list
+endfunction
+
+function! tmuxjump#capture_and_jump(pattern, bang) abort
+  let l:list = tmuxjump#grep_tmux(a:pattern)
+  call tmuxjump#jump_to_file(l:list[0])
+endfunction
+
+function! tmuxjump#capture_and_list_file(pattern, bang) abort
+  let l:list = tmuxjump#grep_tmux(a:pattern)
+  call tmuxjump#open_fzf(l:list)
+endfunction
+
+function tmuxjump#open_fzf(list) abort
   let l:name = 'Sibling pane files'
   let l:prompt = 'TmuxJump> '
   let l:action = ''
@@ -50,13 +63,14 @@ function! tmuxjump#capture_and_jump(bang) abort
         \]
   call fzf#run(fzf#wrap(
         \ {
-        \   'source': l:list,
+        \   'source': a:list,
         \   'sink': { module -> tmuxjump#jump_to_file( module) },
         \   'options': l:fzf_options,
         \ },
         \)) 
 endfunction
 
-command! -bang -nargs=* TmuxJumpFile call tmuxjump#capture_and_jump(<bang>0)
+command! -bang -nargs=* TmuxJumpFile call tmuxjump#capture_and_list_file(<q-args>,<bang>0)
+command! -bang -nargs=* TmuxJumpFirst call tmuxjump#capture_and_jump(<q-args>,<bang>0)
 
 let g:tmuxjump_loaded = v:true
