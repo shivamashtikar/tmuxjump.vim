@@ -20,7 +20,7 @@ function! tmuxjump#jump_to_file(fileWithPos) abort
 endfunction
 
 function tmuxjump#grep_tmux(pattern) abort
-  let l:is_in_tmux = system('[[ "$TERM" =~ "screen" && "$TERM_PROGRAM" == "tmux" ]] && echo "1"')
+  let l:is_in_tmux = has_key(environ(), 'TMUX')
   if !l:is_in_tmux
     echohl WarningMsg
     echo "TmuxJump.vim: Not in tmux session"
