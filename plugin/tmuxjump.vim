@@ -20,12 +20,12 @@ function! tmuxjump#jump_to_file(fileWithPos) abort
 endfunction
 
 function tmuxjump#grep_tmux(pattern) abort
-  let l:is_in_tmux = system('[[ "$TERM" =~ "screen" && "$TERM_PROGRAM" == "tmux" ]] && echo "1"')
+  let l:is_in_tmux = has_key(environ(), 'TMUX')
   if !l:is_in_tmux
     echohl WarningMsg
     echo "TmuxJump.vim: Not in tmux session"
     echohl None
-    return
+    return []
   endif
 
   let l:capturedFiles = system('sh '. g:script_path . ' '. a:pattern)
@@ -33,7 +33,7 @@ function tmuxjump#grep_tmux(pattern) abort
     echohl WarningMsg
     echo "TmuxJump.vim: Found no file paths"
     echohl None
-    return
+    return []
   endif
 
   let l:list = uniq(reverse(split(l:capturedFiles, '\n')))
@@ -42,6 +42,9 @@ endfunction
 
 function! tmuxjump#capture_and_jump(pattern, bang) abort
   let l:list = tmuxjump#grep_tmux(a:pattern)
+  if len(l:list) == 0
+      return 
+  endif
   call tmuxjump#jump_to_file(l:list[0])
 endfunction
 
@@ -62,6 +65,9 @@ endfunction
 
 function! tmuxjump#capture_and_list_file(pattern, bang) abort
   let l:list = tmuxjump#grep_tmux(a:pattern)
+  if len(l:list) == 0
+      return
+  endif
   if get(g:, 'tmuxjump_telescope')
     call tmuxjump#open_telescope(l:list)
   else
