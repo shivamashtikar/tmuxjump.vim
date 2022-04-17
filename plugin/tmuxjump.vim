@@ -45,9 +45,28 @@ function! tmuxjump#capture_and_jump(pattern, bang) abort
   call tmuxjump#jump_to_file(l:list[0])
 endfunction
 
+function! tmuxjump#open_telescope(list) abort
+lua << EOF
+local pickers = require "telescope.pickers"
+local finders = require "telescope.finders"
+local conf = require("telescope.config").values
+pickers.new({}, {
+  prompt_title = "TmuxJump",
+  finder = finders.new_table {
+    results = vim.api.nvim_eval('a:list')
+  },
+  sorter = conf.generic_sorter(opts),
+}):find()
+EOF
+endfunction
+
 function! tmuxjump#capture_and_list_file(pattern, bang) abort
   let l:list = tmuxjump#grep_tmux(a:pattern)
-  call tmuxjump#open_fzf(l:list)
+  if get(g:, 'tmuxjump_telescope')
+    call tmuxjump#open_telescope(l:list)
+  else
+    call tmuxjump#open_fzf(l:list)
+  endif
 endfunction
 
 function tmuxjump#open_fzf(list) abort

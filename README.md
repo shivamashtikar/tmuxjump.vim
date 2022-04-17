@@ -12,7 +12,14 @@ greps all the file path printed on sibling panes and populates them in fzf
 window. And then I can decide and jump to that location easily without moving 
 out of nvim.
 
-[![TmuxJump](./assets/tmuxjump-vim.png)](https://youtu.be/Wo1E1z257GA)
+### With Fzf.vim
+![TmuxJump](./assets/tmuxjump-vim.png)
+
+### With Telescope.nvim
+![TmuxJump](./assets/tmuxjump_telescope.png)
+
+
+[Demo video](https://www.youtube.com/watch?v=Wo1E1z257GA)
 
 ## Install
 
@@ -21,6 +28,7 @@ out of nvim.
 This plugin is dependent on following
 - [Fzf.vim](https://github.com/junegunn/fzf.vim)
 - [tmux](https://github.com/tmux/tmux/wiki)
+- (Optional) [Telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) 
 
 ### Installation
 
@@ -41,7 +49,7 @@ Using [neobundle](https://github.com/Shougo/neobundle.vim):
 With [pathogen.vim](https://github.com/tpope/vim-pathogen), just clone this repository inside `~/.vim/bundle`:
 
 
-### Configuration
+## Configuration
 
 Plugin exposes two commands `TmuxJumpFile` & `TmuxJumpFirst` 
 
@@ -62,5 +70,12 @@ in purescript buffer, it'll only look for paths which contain `purs` string
   ```
   autocmd FileType purescript nnoremap <leader>ft :TmuxJumpFile purs<CR>
   autocmd FileType purescript nnoremap <leader>; :TmuxJumpFirst purs<CR>
+  ```
+
+Plugin by default uses fzf for listing files in window. However it supports Telescope.nvim
+too, which can be enabled by setting below variable in vimrc
+
+  ```
+  let g:tmuxjump_telescope = v:true
   ```
 
