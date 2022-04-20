@@ -28,7 +28,7 @@ function tmuxjump#grep_tmux(pattern) abort
     return []
   endif
 
-  let l:capturedFiles = system('sh '. g:script_path . ' '. a:pattern)
+  let l:capturedFiles = system('bash '. g:script_path . ' '. a:pattern)
   if l:capturedFiles == ""
     echohl WarningMsg
     echo "TmuxJump.vim: Found no file paths"
