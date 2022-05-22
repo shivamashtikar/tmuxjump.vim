@@ -79,3 +79,9 @@ too, which can be enabled by setting below variable in vimrc
   let g:tmuxjump_telescope = v:true
   ```
 
+Plugin by default capture sibling panes with [capture.sh](scripts/capture.sh). However it supports custom script
+too, which can configured by setting below variable in vimrc
+
+  ```
+  let g:tmuxjump_custom_capture = "/path/my_custom_script"
+  ```
